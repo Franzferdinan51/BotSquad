@@ -20,6 +20,7 @@ Decision categories:
 import json
 import argparse
 import sys
+import os
 from pathlib import Path
 from datetime import datetime
 
@@ -108,6 +109,7 @@ def decide_on_issue(issue):
         "rationale": rule["rationale"],
         "auto_execute": rule.get("auto_execute", False),
         "decided_at": datetime.now().isoformat(),
+        "decided_by": os.environ.get("BOT_SQUAD_AGENT_NAME", "hermes"),  # who made this call
     }
 
 

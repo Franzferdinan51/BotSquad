@@ -1,8 +1,10 @@
-# Swapping Engines - Quick Guide
+# Swapping the Watcher's LLM Engine
 
-The Bot Squad uses an **engine abstraction layer** in `config_loader.py`. To change which AI powers the Watcher (and any future LLM calls), you change ONE line in `config.yaml`.
+The Bot Squad uses an **engine abstraction layer** in `config_loader.py`. The Watcher calls an LLM for "insight enrichment" (e.g., "GPU is idle — likely cause: miner container exited"). To change which LLM the Watcher uses for that, you change ONE line in `config.yaml`.
 
-## Current default: Grok 4.3
+**Important:** This is NOT about switching between Hermes and OpenClaw — those are the agents that READ the Watcher's output. The engine here is just the LLM the Watcher asks for triage context.
+
+**Current default: Grok 4.3**
 
 ```yaml
 engine: "grok"
