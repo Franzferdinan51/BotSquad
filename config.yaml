@@ -1,0 +1,93 @@
+# Bot Squad v1.0 Configuration
+# ============================
+# Edit this file to change models, swap engines, tune thresholds.
+# All scripts read from here. Defaults work out of the box.
+
+# ============================================================
+# ENGINE — which AI engine powers the Watcher (and later, Brain)
+# ============================================================
+# Options:
+#   "grok"        — xAI Grok (current default, cheapest)
+#   "openclaw"    — OpenClaw gateway on port 18789 (Duckets has this set up)
+#   "hermes"      — Local Hermes on port 18793
+#   "lmstudio"    — Local LM Studio at 192.168.1.81:1234
+#   "minimax"     — Direct MiniMax M3 API
+#   "none"        — Disable LLM calls (rules only)
+#
+# NOTE: This is what makes the system "easily swappable."
+# Change `watcher.engine` to "openclaw" and restart the task — done.
+engine: "grok"
+
+# Grok settings (xAI)
+grok:
+  api_base: "https://api.x.ai/v1"
+  api_key_env: "XAI_API_KEY"   # set in env, NOT hardcoded
+  model: "grok-4-3-fast"        # cheapest, fast enough for triage
+  timeout_seconds: 10
+
+# OpenClaw settings (already running on this box)
+openclaw:
+  base_url: "http://127.0.0.1:18789"
+  model: "default"
+  timeout_seconds: 15
+  # OpenClaw has Telegram/Discord/Slack routing built-in
+  # When you swap to this, you can remove the manual Telegram code in watcher.py
+
+# Hermes settings
+hermes:
+  base_url: "http://127.0.0.1:18793"
+  model: "default"
+  timeout_seconds: 15
+
+# LM Studio settings
+lmstudio:
+  base_url: "http://127.0.0.1:1234"
+  api_key_path: "~/.lmstudio/credentials/lmstudio-hub.json"
+  model: "default"
+  timeout_seconds: 30
+
+# MiniMax direct
+minimax:
+  api_base: "https://api.minimaxi.com/v1"
+  api_key_env: "MINIMAX_API_KEY"
+  model: "MiniMax-Text-01"
+  timeout_seconds: 30
+
+# ============================================================
+# TELEGRAM — for Watcher alerts
+# ============================================================
+telegram:
+  enabled: true
+  bot_token_env: "TELEGRAM_BOT_TOKEN"  # set in env
+  chat_id: "588090613"                  # Duckets' Telegram chat ID
+  # When using OpenClaw engine, telegram routing is built-in.
+  # Set enabled: false to let OpenClaw handle all messaging.
+
+# ============================================================
+# THRESHOLDS — when does each check become an issue?
+# ============================================================
+thresholds:
+  disk_warn_pct: 90
+  disk_crit_pct: 95
+  gpu_warn_pct: 50          # below this while mining = stalled
+  mem_warn_pct: 90
+  expected_prl_workers:
+    - default
+    - mainpc
+    - vetgirl
+    - grievous
+
+# ============================================================
+# SCHEDULING
+# ============================================================
+schedule:
+  interval_hours: 2
+  # Cooldown per issue type — prevents fix-loops
+  auto_fix_cooldown_minutes: 5
+
+# ============================================================
+# PRL POOL
+# ============================================================
+prl:
+  wallet: "prl1p5xxsuhhm4fvv72pvaz9hn4d8je6eahuxtet0nrlhxtjkfedpmews5pnwav"
+  pool_api: "https://pearl.alphapool.tech/api/miner"
